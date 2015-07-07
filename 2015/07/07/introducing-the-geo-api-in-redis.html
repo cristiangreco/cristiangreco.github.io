@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Introducing the Geo API in Redis">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="../../../stylesheets/stylesheet.css">
+
+    <title>Introducing the Geo API in Redis</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">Introducing the Geo API in Redis</h1>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+          <p>Since a few days, the <a href="https://github.com/antirez/redis/blob/unstable/src/geo.c">Geo API</a> has been introduced in Redis. At the time of writing, the work is quite complete but still considered in progress: everything you’ll read here is actually available in the unstable development branch and not yet released for production (plans are to release it with the next 3.2 version).</p>
+
+        <p>The Geo API consists of a set of new commands that add support for storing and querying pairs of longitude/latitude coordinates into Redis keys. GeoSet is the name of the data structure holding a set of (x,y) coordinates. Actually, there isn’t any new data structure under the hood: a GeoSet is simply a Redis SortedSet.</p>
+
+        <p>Let’s have a quick look at the syntax of the new <b>GEO*</b> commands:</p>
+        
+        <ul>
+            <li>
+                <pre>GEOADD key long lat name [long2 lat2 name2 ... longN latN nameN]</pre>
+                <p><em>Add a member with the specified long/lat coordinates to a GeoSet.</em></p>
+            </li>
+            <li>
+                <pre>GEORADIUS key long lat radius unit [WITHDIST] [WITHHASH] [WITHCOORD] [ASC|DESC] [COUNT count]</pre>
+                <p><em>Search a GeoSet for members within ‘radius’ distance from given coordinates. Valid units for radius are m, km, ft, mi.</em></p>
+            </li>
+            <li>
+                <pre>GEORADIUSBYMEMBER key member radius unit [WITHDIST] [WITHHASH] [WITHCOORD] [ASC|DESC] [COUNT count]</pre>
+                <p><em>The same as GEORADIUS, but the search is centered on the coordinates of a member of the GeoSet.</em></p>
+            </li>
+            <li>
+                <pre>GEOPOS key elem1 elem2 ... elemN</pre>
+                <p><em>Return the long/lat coordinates of each specified element in a GeoSet.</em></p>
+            </li>
+            <li>
+                <pre>GEODIST key elem1 elem2 [unit]</pre>
+                <p><em>Return the distance in unit (meters by default) between elem1 and elem2 in a GeoSet.</em></p>
+            </li>
+            <li>
+                <pre>GEOHASH key elem1 elem2 ... elemN</pre>
+                <p><em>Return the GeoHash string representation (an array of 11 characters) of the coordinates of the specified elements.</em></p>
+            </li>
+            <li>
+                <pre>GEOENCODE long lat [radius unit]</pre>
+                <p><em>Translate the given coordinates to the GeoHash integer value with highest accuracy.</em></p>
+            </li>
+            <li>
+                <pre>GEODECODE hash</pre>
+                <p><em>Translate a GeoHash integer value back to a pair of coordinates.</em></p>
+            </li>
+        </ul>
+        
+        <p>I think at this point you're wondering what a GeoHash is ... before digging into details let's have a visual example.</p>
+        
+        <h3>Building an Hotel Reservation system with map search</h3>
+        
+        <p>A picture is worth a thousand words, so let's build a real-world example.</p>
+        
+        <p>I downloaded (thanks to <a href="http://overpass-turbo.eu/">Overpass turbo</a>) a small dataset with the coordinates of a set of hotels in Rome (a very small set indeed) and imported it into Redis. This is the GeoJSON <a href="https://gist.github.com/cristiangreco/e806521f70370eaa1c1b">dataset</a> and an example script to load it. It is as easy as adding coordinates with symbolic names in a GeoSet and then populating a key for each hotel data (using such names in order to later retrieve it).</p>
+        
+<pre>
+geoadd hotels 12.4844774 41.9184129 h:259299923 12.4920147 41.9175913 h:261733735 ...
+set h:259299923 '{"geometry": {"type": "Point", "coordinates": [12.4844774, 41.9184129]} ...'
+set h:261733735 '{"geometry": {"type": "Point", "coordinates": [12.4920147, 41.9175913]} ...'
+...
+</pre>
+        
+        <p>All the hotels visualized on a map:</p>
+        
+        <div style="text-align: center">
+        <img src="../../../images/all.png" alt="All hotels" />
+        </div>
+        
+        <p>Now let's suppose you're searching for an accommodation near <a href="https://en.wikipedia.org/wiki/Roma_Termini_railway_station">Stazione Termini</a> (not really the best place to stay in Rome). How do you retrieve the hotels within 1km from your point of interest?</p>
+        
+        <pre>
+GEORADIUS hotels 12.499705 41.902372 1 km
+ 1) "h:530719587"
+ 2) "h:3412957318"
+ 3) "h:3554601725"
+ 4) "h:1743613641"
+ 5) "h:3292538681"
+...
+        </pre>
+        
+        <p>Fine, but a friend of mine suggested me a cheap accommodation near Termini, let’s say property known as h:2309332158. Ouch, no availability for my dates… let’s search for the accommodations at shortest distance:</p>
+
+        <pre>
+GEORADIUSBYMEMBER hotels h:2309332158 1 km withdist asc
+ 1) 1) "h:2309332158"
+    2) "0.0000"
+ 2) 1) "h:3403814918"
+    2) "0.0627"
+ 3) 1) "h:3403814919"
+    2) "0.0657"
+ 4) 1) "h:3403817806"
+    2) "0.0688"
+ 5) 1) "h:2397317566"
+    2) "0.0928"
+...
+        </pre>
+        
+        <p>This is how the result could be presented to the user:</p>
+        
+        <div style="text-align: center">
+        <img src="../../../images/100.png" alt="1km range search" />
+        </div>
+        
+        <p>Let's retrieve the position on the map of two of the hotels in this list:</p>
+
+<pre>
+GEOPOS hotels h:3403814919 h:3403817806
+1) 1) "12.497514188289642"
+   2) "41.899867204456598"
+2) 1) "12.497755587100983"
+   2) "41.900039565495433”
+</pre>
+
+    <p>Quite close to each other? Yeah, say less than 30 meters:</p>
+
+<pre>
+GEODIST hotels h:3403814919 h:3403817806
+"27.693296515757325"
+</pre>
+
+    <h3>Under the hood: GeoHashing</h3>
+    
+    <p>We said before that a GeoSet in Redis is implemented as a SortedSet (actually the GEOADD command translates your input to a proper ZADD command). All members in a SortedSet have a score value associated used for sorting (indeed) and range indexing. But  how is it possible to translate a pair of coordinates to a score?</p>
+    
+    <p><a href="https://en.wikipedia.org/wiki/Geohash">GeoHashing</a> is a technique to encode a pair of longitude/latitude coordinates into a single ASCII string (usually encoded base32). It all started with the <a href="http://geohash.org">geohash.org</a> service as a way to represent locations with short and easily shareable urls.</p>
+    
+    <p>The GeoHash encoding algorithm offers arbitrary precision. The accuracy of the representation depends on the number of bits used. Also, the raw binary form can be interpreted as an integer instead of a base32 string. This is the intuition behind the usage of GeoHash as a score for a SortedSet.</p>
+    
+    <p>The integer GeoHash implementation in Redis derives from <a href="https://github.com/yinqiwen/ardb">Ardb</a>, but has been completely reimplemented by <a href="https://matt.sh/redis-geo#_origin-story">Matt Stancliff</a> and is based on a 52bit integer representation (which gives an accuracy of less than 1 meter). Why 52bit? Because SortedSet uses double values for members scores, and a double can safely hold a 52bit integer without loss of accuracy.</p>
+        
+    <p>The GeoHash score of a GeoSet member can be exposed with a ZRANGE command (GeoSets are SortedSets, right?):</p>
+    
+<pre>
+ZRANGE hotels 0 -1 withscores
+  1) "h:2138691946"
+  2) "3480341633710855"
+  3) "h:2302346446"
+  4) "3480341645075993"
+  5) "h:2985974223"
+  6) "3480341646134189"
+...
+</pre>
+    
+    <p>The corresponding base32 string representation can be obtained in this way:</p>
+
+<pre>
+GEOHASH hotels h:530719587
+1) "sr2ykhnegy0"
+</pre>   
+    
+    <p>See how it translates back to coordinates on <a href="http://geohash.org/sr2ykhnegy0">http://geohash.org/sr2ykhnegy0</a>.</p>
+    
+    <p>So, the integer GeoHash encoding is a Redis-specific implementation detail, and Geo API provides two specific commands to deal with it:</p>
+
+<pre>
+GEOENCODE 12.498113 41.8994816
+1) (integer) 3480343095387795
+2) 1) "12.498112320899963"
+   2) "41.899480659479806"
+3) 1) "12.498117685317993"
+   2) "41.899483194200954"
+4) 1) "12.498115003108978"
+   2) "41.89948192684038"
+5) 1) "3480343095387795"
+   2) "3480343095387796"
+
+GEODECODE 3480343095387795
+1) 1) "12.498112320899963"
+   2) "41.899480659479806"
+2) 1) "12.498117685317993"
+   2) "41.899483194200954"
+3) 1) "12.498115003108978"
+   2) "41.89948192684038"
+</pre>
+    
+    <p>The output may look scary at first, but keep in mind that a GeoHash represents actually an area rather than a single point (in fact, you can add a radius to GEOENCODE). So the first pair of coordinates in this multi-bulk reply is the minimum corner (i.e. the south-west point) of the bounding box, then the maximum corner (north-est point) and an averaged center of the area.</p>
+
+    <p>The GEOENCODE command also outputs two scores to be used as range query parameters. A fundamental property of GeoHashing is that a range search between a lower and a higher range (excluded) will contain all members with corresponding coordinates in this range.</p>
+    
+    <p>Given a pair of coordinates, we use GEOENCODE to determine the GeoHash that represents its 1km bounding box with highest accuracy:</p>
+
+<pre>
+GEOENCODE 12.498113 41.8994816 1000 m
+1) (integer) 3480343080337408
+2) 1) "12.48046875"
+   2) "41.892249100012208"
+3) 1) "12.50244140625"
+   2) "41.902631317880861"
+4) 1) "12.491455078125"
+   2) "41.897440208946534"
+5) 1) "3480343080337408"
+   2) "3480343097114624"
+</pre>
+    
+    <p>Then, a range search using the returned low-high GeoHashes produces:</p>
+
+<pre>
+ZRANGEBYSCORE hotels 3480343080337408 3480343097114624
+ 1) "h:3192164485"
+ 2) "h:1649776328"
+ 3) "h:985232400"
+...
+</pre>
+
+        <p>A visual representation of the bounding box: note that the initial (highlighted) value is not the center of the box, but just falls within it.</p>
+    
+        <div style="text-align: center">
+        <img src="../../../images/bb.png" alt="1km bounding box" />
+        </div>
+    
+        <br>
+        <p><a href="/">home</a> &raquo; 2015/07/07 &raquo; <em>Introducing the Geo API in Redis</em></p>
+
+      <div id="disqus_thread"></div>
+
+      </section>
+    </div>
+
+<!-- analytics -->
+<script type="text/javascript">
+var clicky_site_ids = clicky_site_ids || [];
+clicky_site_ids.push(100794416);
+(function() {
+    var s = document.createElement('script');
+      s.type = 'text/javascript';
+        s.async = true;
+          s.src = '//static.getclicky.com/js';
+            ( document.getElementsByTagName('head')[0] ||
+              document.getElementsByTagName('body')[0] ).appendChild( s );
+})();
+</script>
+<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100794416ns.gif"/></p></noscript>
+<!-- analytics -->
+
+<!-- disqus -->
+<script type="text/javascript">
+    var disqus_shortname = 'cristianregolocc';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+      </footer>
+    </div>
+
+  </body>
+</html>
