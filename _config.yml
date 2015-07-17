@@ -1,0 +1,12 @@
+# Site settings
+title: Concurrent thoughts
+email: cristian@regolo.cc
+description: "weblog by Cristian Greco"
+baseurl: ""
+url: "http://cristian.regolo.cc"
+twitter_username: cristiangreco
+github_username:  cristiangreco
+
+# Build settings
+markdown: kramdown
+permalink: /:year/:month/:day/:title.html
