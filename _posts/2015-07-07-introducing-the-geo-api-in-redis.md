@@ -53,7 +53,7 @@ I think at this point you're wondering what a GeoHash is ... before digging into
         
 A picture is worth a thousand words, so let's build a real-world example.
 
-I downloaded (thanks to [Overpass turbo](http://overpass-turbo.eu])) a small dataset with the coordinates of a set of hotels in Rome (a very small set indeed) and imported it into Redis.
+I downloaded (thanks to [Overpass turbo](http://overpass-turbo.eu) a small dataset with the coordinates of a set of hotels in Rome (a very small set indeed) and imported it into Redis.
 This is the [GeoJSON dataset](https://gist.github.com/cristiangreco/e806521f70370eaa1c1b) and an example script to load it.
 It is as easy as adding coordinates with symbolic names in a GeoSet and then populating a key for each hotel data (using such names in order to later retrieve it).
 
