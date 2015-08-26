@@ -226,14 +226,13 @@ a:visited { color: #205caa; }
 
 .post pre,
 .post code {
-  border: 1px solid #d5d5e9;
-  background-color: #eef;
-  padding: 8px 12px;
+  background-color: #f9f9f9;
+  padding: 0 .4em;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
   font-size: 15px;
-  overflow:scroll;
+  overflow-x:scroll;
 }
 
 .post code { padding: 1px 5px; }
