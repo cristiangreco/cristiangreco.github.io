@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html>
-  {% capture ENV %}{{ site.data.env.name }}{% endcapture %}
-
-  {% include head.html %}
-
-    <body>
-
+{% capture ENV %}{{ site.data.env.name }}{% endcapture %}
+{% include head.html %}
+  <body>
     {% include header.html %}
-
-    <div class="page-content">
+      <div class="page-content">
       <div class="wrap">
-      {{ content }}
+        {{ content }}
       </div>
     </div>
-
     {% include footer.html %}
-
-    </body>
+  </body>
 </html>
