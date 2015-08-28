@@ -1,0 +1,16 @@
+#!/bin/sh
+
+CSS=css/site.css
+MIN_CSS=_includes/site.min.css
+
+echo -n "yui-compressor: "
+
+yui-compressor -o $MIN_CSS $CSS
+
+CSS_SIZE=$(stat -c %s "$CSS")
+MIN_CSS_SIZE=$(stat -c %s "$MIN_CSS")
+PERCENT=$(echo "scale=2; ($MIN_CSS_SIZE - $CSS_SIZE) / $CSS_SIZE * 100 " | bc)
+
+echo "$CSS_SIZE ~> $MIN_CSS_SIZE bytes [$PERCENT%]"
+
+git add $MIN_CSS
