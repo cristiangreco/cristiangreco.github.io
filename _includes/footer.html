@@ -65,6 +65,7 @@
 
 </footer>
 
+{% if ENV != 'dev' %}
 <script type="text/javascript">
 var clicky_site_ids = clicky_site_ids || [];
 clicky_site_ids.push(100794416);
@@ -95,5 +96,5 @@ r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
 a.appendChild(r);
 })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
 </script>
-
+{% endif %}
 
