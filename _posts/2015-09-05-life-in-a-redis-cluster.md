@@ -30,7 +30,7 @@ This packet flow constitutes the heartbeat mechanism of the cluster, a means of 
 
 This animation[^animation] shows the heartbeat packet flow in a cluster of 5 master nodes under normal operation. While it is extremely slowed down, you can see that every PING packet triggers a PONG reply from the receiver node:
 
-<div style="text-align: center; max-width: 100%; height: auto;" markdown="1">
+<div style="text-align: center;" markdown="1">
 [![Redis Cluster heartbeat: PING / PONG packets](/images/redis-cluster-ping.jpg)](https://youtu.be/0BLmM73y3oo "Redis Cluster heartbeat: PING / PONG packets")
 </div>
 
@@ -59,7 +59,7 @@ This means that initially the trust relationship between cluster nodes is effect
 
 In this animation you can see the bootstrap phase of a Redis Cluster with 5 masters:
 
-<div style="text-align: center; max-width: 100%; height: auto;" markdown="1">
+<div style="text-align: center;" markdown="1">
 [![Redis Cluster bootstrap: MEET packets](/images/redis-cluster-meet.jpg)](https://youtu.be/JwZnM4sh5CQ "Redis Cluster bootstrap: MEET packets")
 </div>
 
@@ -75,7 +75,7 @@ Through gossip, all nodes eventually converge to a common shared view of the sta
 
 This last animation shows in details what happens when a new node is connected to a cluster of 50 nodes:
 
-<div style="text-align: center; max-width: 100%; height: auto;" markdown="1">
+<div style="text-align: center;" markdown="1">
 [![Redis Cluster: adding a new node](/images/redis-cluster-add-node.jpg)](https://youtu.be/0Q2wWtT6xog "Redis Cluster: adding a new node")
 </div>
 
