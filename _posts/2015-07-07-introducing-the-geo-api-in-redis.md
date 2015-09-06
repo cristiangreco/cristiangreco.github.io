@@ -2,6 +2,7 @@
 layout: post
 title: "Introducing the Geo API in Redis"
 date: 2015-07-07 08:24:00
+tags: redis
 disqus: true
 disqus_id: introducing-the-geo-api-in-redis
 ---

@@ -2,6 +2,7 @@
 layout: post
 title: "Book Review: Redis Applied Design Patterns"
 date: 2014-11-29 10:00:00
+tags: redis, book-review
 disqus: true
 disqus_id: review-redis-applied-design-patterns
 ---

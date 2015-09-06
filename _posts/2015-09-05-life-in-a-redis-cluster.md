@@ -2,6 +2,7 @@
 layout: post
 title: "Life in a Redis Cluster: Meet and Gossip with your neighbors"
 date: 2015-09-05 15:00:00
+tags: redis
 disqus: true
 disqus_id: life-in-a-redis-cluster
 ---
@@ -31,7 +32,7 @@ This packet flow constitutes the heartbeat mechanism of the cluster, a means of 
 This animation[^animation] shows the heartbeat packet flow in a cluster of 5 master nodes under normal operation. While it is extremely slowed down, you can see that every PING packet triggers a PONG reply from the receiver node:
 
 <div style="text-align: center;" markdown="1">
-[![Redis Cluster heartbeat: PING / PONG packets](/images/redis-cluster-ping.jpg)](https://youtu.be/0BLmM73y3oo "Redis Cluster heartbeat: PING / PONG packets")
+[![Redis Cluster heartbeat: PING / PONG packets](/images/redis-cluster-ping.jpg)](https://youtu.be/0BLmM73y3oo "Redis Cluster heartbeat: PING / PONG packets"){:target="_blank"}
 </div>
 
 In order to avoid exchanging too many packets on the network, usually a node will ping only a few (not all) randomly chosen nodes every second. However, the `cluster-node-timeout` configuration parameter controls (among other things) the volume of heartbeat packets exchanged between nodes: each node in the cluster will always try to ping every other node that didn't send a PING or received a PONG for longer than half this timeout value.
@@ -60,7 +61,7 @@ This means that initially the trust relationship between cluster nodes is effect
 In this animation you can see the bootstrap phase of a Redis Cluster with 5 masters:
 
 <div style="text-align: center;" markdown="1">
-[![Redis Cluster bootstrap: MEET packets](/images/redis-cluster-meet.jpg)](https://youtu.be/JwZnM4sh5CQ "Redis Cluster bootstrap: MEET packets")
+[![Redis Cluster bootstrap: MEET packets](/images/redis-cluster-meet.jpg)](https://youtu.be/JwZnM4sh5CQ "Redis Cluster bootstrap: MEET packets"){:target="_blank"}
 </div>
 
 Here node 9000 is the first trusted node, so every other node meets with it and receives a PONG reply. After some time that node 9000 knows about every other node in the cluster, you can see other nodes spontaneously getting in touch with each other through additional MEET messages, thus forming the fully connected network of an operational Redis Cluster. How did this information propagate across all nodes?
@@ -76,7 +77,7 @@ Through gossip, all nodes eventually converge to a common shared view of the sta
 This last animation shows in details what happens when a new node is connected to a cluster of 50 nodes:
 
 <div style="text-align: center;" markdown="1">
-[![Redis Cluster: adding a new node](/images/redis-cluster-add-node.jpg)](https://youtu.be/0Q2wWtT6xog "Redis Cluster: adding a new node")
+[![Redis Cluster: adding a new node](/images/redis-cluster-add-node.jpg)](https://youtu.be/0Q2wWtT6xog "Redis Cluster: adding a new node"){:target="_blank"}
 </div>
 
 The video only shows MEET messages and PING / PONG packets that carry the information of the new node (so a lot of other heartbeat traffic is not represented). Nodes are initially in gray as they don't know about the newly connected Redis instance, nor it knows about them. What can happen here is either:
