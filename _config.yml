@@ -9,4 +9,5 @@ github_username:  cristiangreco
 
 # Build settings
 markdown: kramdown
+highlighter: rouge
 permalink: /:year/:month/:day/:title.html
