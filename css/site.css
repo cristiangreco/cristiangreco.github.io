@@ -9,7 +9,7 @@
 html, body { height: 100%; }
 
 body {
-  font-family: 'Slabo 27px', serif;
+  font-family: "Open Sans", serif, "STIX Two Math";
   line-height: 1.5;
   font-weight: 400;
   background-color: #fdfdfd;
