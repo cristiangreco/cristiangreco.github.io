@@ -30,7 +30,7 @@ print "Hello World"
 If you `strace` the script to intercept syscalls, this is what you should see:
 
 ```
-$ strace -e trace=open,execve,write ./hello.py 
+$ strace -e trace=open,execve,write ./hello.py
 execve("./hello.py", ["./hello.py"], [/* 59 vars */]) = 0
 open("/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
 open("/lib/x86_64-linux-gnu/libpthread.so.0", O_RDONLY|O_CLOEXEC) = 3
@@ -58,13 +58,13 @@ In the example above, any syscall after the `execve()` is actually issued by the
 The first line of a script file specifies the interpreter path and optional arguments for the interpreter itself. Any other command line argument is appended after the script path. Let's explain this with an example:
 
 ```
-$ cat script.sh 
+$ cat script.sh
 #!/home/cristian/myecho interp_arg1 interp_arg2
 ```
 
 The `myecho` interpreter is a little C program that outputs `argv`:
 
-```C
+```c
 #include <stdio.h>
 
 int main(int argc, char* argv[]) {
@@ -112,10 +112,10 @@ In other words, `#!/usr/bin/env python` executes `env` as an interpreter, passin
 Some UNIX implementations permit the interpreter of a script to itself be a script. On Linux, this kind of "executable search" is recursive up to an hardcoded limit of [four recursions](http://lxr.free-electrons.com/source/fs/exec.c#L1560).
 
 ```
-$ cat nested.sh 
+$ cat nested.sh
 #!./nested.sh
 
-$ ./nested.sh 
+$ ./nested.sh
 bash: ./nested.sh: /nested.sh: bad interpreter: Too many levels of symbolic links
 ```
 
@@ -125,7 +125,7 @@ On Linux, and in other Unix implementations, the `setuid` bit on scripts in igno
 
 We can prepare a small test program:
 
-```
+```c
 #include <unistd.h>
 #include <stdio.h>
 
@@ -137,29 +137,29 @@ int main() {
 The `setuid` permission on the binary executable works as expected:
 
 ```
-$ ./test-setuid 
+$ ./test-setuid
 real=1000 effective=1000
 
-$ sudo chown root test-setuid && sudo chmod +s test-setuid 
+$ sudo chown root test-setuid && sudo chmod +s test-setuid
 
-$ ./test-setuid 
+$ ./test-setuid
 real=1000 effective=0
 ```
 
 If we do the same job on a script, the `setuid` bit is ignored instead:
 
 ```
-$ cat test-setuid.sh 
+$ cat test-setuid.sh
 #!/bin/bash
 
 id -u
 
-$ ./test-setuid.sh 
+$ ./test-setuid.sh
 1000
 
-$ sudo chown root test-setuid.sh && sudo chmod +s test-setuid.sh 
+$ sudo chown root test-setuid.sh && sudo chmod +s test-setuid.sh
 
-$ ./test-setuid.sh 
+$ ./test-setuid.sh
 1000
 ```
 
