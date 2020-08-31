@@ -1,13 +1,17 @@
-# Site settings
-title: Concurrent thoughts
+lang: en
+title: Cristian Greco
+author: Cristian Greco
 email: cristian@regolo.cc
-description: "weblog by Cristian Greco"
+url: "https://cristian.regolo.cc"
 baseurl: ""
-url: "http://cristian.regolo.cc"
+description: a blog on software engineering topics
+theme: minima
+show_excerpts: true
+google_site_verification: googlea12deda5da4bc2bf
+google_analytics: UA-65079873-1
+permalink: /:year/:month/:day/:title.html
 twitter_username: cristiangreco
 github_username:  cristiangreco
-
-# Build settings
-markdown: kramdown
-highlighter: rouge
-permalink: /:year/:month/:day/:title.html
+linkedin_username: cristiangreco
+social:
+  name: Cristian Greco
