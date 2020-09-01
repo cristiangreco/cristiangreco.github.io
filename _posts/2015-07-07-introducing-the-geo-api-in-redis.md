@@ -3,8 +3,7 @@ layout: post
 title: "Introducing the Geo API in Redis"
 date: 2015-07-07 08:24:00
 tags: redis, geohash, coordinates
-disqus: true
-disqus_id: introducing-the-geo-api-in-redis
+comments: true
 excerpt: |-
   GEO commands are a useful but not well known feature of Redis. In this post
   we'll show a real use case example by implementing a coordinates-based

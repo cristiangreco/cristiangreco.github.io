@@ -15,6 +15,8 @@ github_username:  cristiangreco
 linkedin_username: cristiangreco
 social:
   name: Cristian Greco
+disqus:
+  shortname: cristianregolocc
 plugins:
   - jekyll-feed
   - jekyll-sitemap
