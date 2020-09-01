@@ -2,9 +2,14 @@
 layout: post
 title: "Linux internals: how interpreter scripts work"
 date: 2017-01-29 20:00:00
-tags: linux scripting
+tags: linux scripting, linux, shell, interpreter, bash, path, setuid
 disqus: true
 disqus_id: linux-internals-how-interpreter-scripts-work
+excerpt: |-
+  How do scripts work on Linux? How does the kernel find the correct interpreter
+  for a script and run it with arguments? In this post we'll deep-dive into kernel
+  code that handles scripts execution and will show some of the Linux
+  peculiarities with practical examples.
 ---
 
 Shell scripts are a common topic in Linux interview questions. Beside mastering the [art of Bash scripting](http://tldp.org/LDP/abs/html/), it is enlightening to understand how the kernel treats a script - any kind of interpreter script - differently than, say, an ordinary ELF executable.

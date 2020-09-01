@@ -2,9 +2,14 @@
 layout: post
 title: "Life in a Redis Cluster: Meet and Gossip with your neighbors"
 date: 2015-09-05 15:00:00
-tags: redis
+tags: redis, redis cluster, gossip protocols
 disqus: true
 disqus_id: life-in-a-redis-cluster
+excerpt: |-
+  How does Redis Cluster works? How are single instances connected within a
+  cluster and what is the process for bootstrapping a new cluster? In this post
+  we'll explore Redis Cluster internals and will use some cool animations to
+  demonstrate how nodes communicates through a gossip protocol.
 ---
 
 Redis Cluster is going to change your view of Redis.

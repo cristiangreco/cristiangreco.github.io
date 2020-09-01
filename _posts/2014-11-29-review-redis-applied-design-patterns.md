@@ -2,9 +2,12 @@
 layout: post
 title: "Book Review: Redis Applied Design Patterns"
 date: 2014-11-29 10:00:00
-tags: redis, book-review
+tags: redis, book review, design patterns
 disqus: true
 disqus_id: review-redis-applied-design-patterns
+excerpt: |-
+  I've been asked to review this book on Redis patterns, and here is why I think
+  this short book might be interesting to you.
 ---
 
 I’m a [Redis](http://redis.io) fan. It is a nice piece of software with a million use cases. It is written in a modern and worth studying C language, supported by a vibrant community and you can find tons of documentation and examples about it. And it’s developed by a cool [italian guy](https://twitter.com/antirez).

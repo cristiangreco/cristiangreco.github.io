@@ -2,12 +2,17 @@
 layout: post
 title: "Introducing the Geo API in Redis"
 date: 2015-07-07 08:24:00
-tags: redis
+tags: redis, geohash, coordinates
 disqus: true
 disqus_id: introducing-the-geo-api-in-redis
+excerpt: |-
+  GEO commands are a useful but not well known feature of Redis. In this post
+  we'll show a real use case example by implementing a coordinates-based
+  researchtool. We'll then deep-dive into the Geohash encoding technique that
+  Redis uses underneath.
 ---
 
-Since a few days, the [Geo API][geoapi] has been introduced in Redis. 
+Since a few days, the [Geo API][geoapi] has been introduced in Redis.
 At the time of writing, the work is quite complete but still considered in progress: everything you'll read here is actually available in the unstable development branch and not yet released for production (plans are to release it with the next [3.2][redis32] version).
 
 The Geo API consists of a set of new commands that add support for storing and querying pairs of longitude/latitude coordinates into Redis keys.
@@ -51,7 +56,7 @@ Let's have a quick look at the syntax of the new `GEO*` commands:
 I think at this point you're wondering what a GeoHash is ... before digging into details let's have a visual example.
 
 ## Building an Hotel Reservation system with map search ##
-        
+
 A picture is worth a thousand words, so let's build a real-world example.
 
 I downloaded (thanks to [Overpass turbo](http://overpass-turbo.eu) a small dataset with the coordinates of a set of hotels in Rome (a very small set indeed) and imported it into Redis.
@@ -95,7 +100,7 @@ Fine, but a friend of mine suggested me a cheap accommodation near Termini, letâ
 	...
 
 This is how the result could be presented to the user:
-        
+
 <div style="text-align: center" markdown="1">
 ![1km range search](/images/100.png)
 </div>
@@ -116,14 +121,14 @@ Quite close to each other? Yeah, say less than 30 meters:
 ### Under the hood: GeoHashing ###
 
 We said before that a GeoSet in Redis is implemented as a SortedSet (actually the `GEOADD` command translates your input to a proper `ZADD` command). All members in a SortedSet have a score value associated used for sorting (indeed) and range indexing. But how is it possible to translate a pair of coordinates to a score?
-    
+
 [GeoHashing](https://en.wikipedia.org/wiki/Geohash) is a technique to encode a pair of longitude/latitude coordinates into a single ASCII string (usually encoded `base32`). It all started with the [geohash.org](http://geohash.org) service as a way to represent locations with short and easily shareable urls.
-    
+
 The GeoHash encoding algorithm offers arbitrary precision. The accuracy of the representation depends on the number of bits used. Also, the raw binary form can be interpreted as an integer instead of a base32 string. This is the intuition behind the usage of GeoHash as a score for a SortedSet.
-    
+
 The integer GeoHash implementation in Redis derives from [Ardb](https://github.com/yinqiwen/ardb), but has been completely reimplemented by [Matt Stancliff](https://matt.sh/redis-geo#_origin-story) and is based on a 52bit integer representation (which gives an accuracy of less than 1 meter).
 Why 52bit? Because SortedSet uses double values for members scores, and a double can safely hold a 52bit integer without loss of accuracy.
-        
+
 The GeoHash score of a GeoSet member can be exposed with a `ZRANGE` command (GeoSets are SortedSets, right?):
 
 	ZRANGE hotels 0 -1 withscores
@@ -166,7 +171,7 @@ So, the integer GeoHash encoding is a Redis-specific implementation detail, and 
 The output may look scary at first, but keep in mind that a GeoHash represents actually an area rather than a single point (in fact, you can add a radius to GEOENCODE). So the first pair of coordinates in this multi-bulk reply is the minimum corner (i.e. the south-west point) of the bounding box, then the maximum corner (north-est point) and an averaged center of the area.
 
 The GEOENCODE command also outputs two scores to be used as range query parameters. A fundamental property of GeoHashing is that a range search between a lower and a higher range (excluded) will contain all members with corresponding coordinates in this range.
-    
+
 Given a pair of coordinates, we use GEOENCODE to determine the GeoHash that represents its 1km bounding box with highest accuracy:
 
 	GEOENCODE 12.498113 41.8994816 1000 m
