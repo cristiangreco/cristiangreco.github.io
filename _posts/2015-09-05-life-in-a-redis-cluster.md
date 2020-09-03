@@ -2,7 +2,11 @@
 layout: post
 title: "Life in a Redis Cluster: Meet and Gossip with your neighbors"
 date: 2015-09-05 15:00:00
-tags: redis, redis cluster, gossip protocols
+tags:
+  - redis
+  - redis cluster
+  - gossip protocols
+  - networking
 comments: true
 excerpt: |-
   How does Redis Cluster works? How are single instances connected within a

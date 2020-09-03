@@ -2,7 +2,11 @@
 layout: post
 title: "Linux internals: how interpreter scripts work"
 date: 2017-01-29 20:00:00
-tags: linux scripting, linux, shell, interpreter, bash, path, setuid
+tags:
+  - linux
+  - kernel
+  - scripting
+  - setuid
 comments: true
 excerpt: |-
   How do scripts work on Linux? How does the kernel find the correct interpreter

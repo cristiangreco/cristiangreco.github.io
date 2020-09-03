@@ -2,7 +2,11 @@
 layout: post
 title: "Book Review: Redis Applied Design Patterns"
 date: 2014-11-29 10:00:00
-tags: redis, book review, design patterns
+tags:
+  - redis
+  - redis book
+  - book review
+  - design patterns
 comments: true
 excerpt: |-
   I've been asked to review this book on Redis patterns, and here is why I think
