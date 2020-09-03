@@ -12,7 +12,7 @@ excerpt: |-
 <figure>
   <img src="/images/elbow-bump.jpeg" alt="elbow bump emoji">
   <figcaption markdown="1">
-  "Elbow bump" emoji ([Stephen Paul Wright](https://www.stephenpaulwright.com/))
+  "Elbow bump" emoji ([Stephen Paul Wright](https://www.stephenpaulwright.com/){:target="_blank"})
   </figcaption>
 </figure>
 
