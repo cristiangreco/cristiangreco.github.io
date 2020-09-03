@@ -1,0 +1,27 @@
+---
+# Needs a front-matter.
+---
+
+@import "minima";
+
+hr.hrule {
+  margin-bottom: 20px;
+  border: none;
+  text-align: center;
+  font-size: 35px;
+  color: $grey-color-dark;
+}
+
+hr.hrule::before {
+  content: "...";
+}
+
+figcaption {
+  color: $grey-color;
+	text-align: center;
+}
+
+figcaption a {
+  color: inherit;
+  text-decoration: underline;
+}
