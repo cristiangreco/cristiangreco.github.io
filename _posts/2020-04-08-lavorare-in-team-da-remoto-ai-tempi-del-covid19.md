@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Lavorare in team da remoto ai tempi del COVID-19
+title: Lavorare in team da remoto ai tempi del COVID-19 (🇮🇹 italian version)
 date: 2020-04-08 10:00:00
 tags:
   - remote working
