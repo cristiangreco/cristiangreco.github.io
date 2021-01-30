@@ -4,7 +4,7 @@ layout: default
 
 {% comment %}
 What's changed:
-- Don't print `content` (it'd add README.md)
+- Date after post title
 - Changed rss link
 {% endcomment %}
 
@@ -20,15 +20,19 @@ What's changed:
     <ul class="post-list">
       {%- for post in site.posts -%}
       <li>
-        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        <span class="post-meta">{{ post.date | date: date_format }}</span>
-        <h3>
+        <h3 style="margin-bottom: 0px;">
           <a class="post-link" href="{{ post.url | relative_url }}">
             {{ post.title | escape }}
           </a>
         </h3>
+
+        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+        <span class="post-meta">{{ post.date | date: date_format }}</span>
+
         {%- if site.show_excerpts -%}
-          {{ post.excerpt }}
+          <div style="margin-top: 10px; margin-bottom: 45px;">
+            {{ post.excerpt }}
+          </div>
         {%- endif -%}
       </li>
       {%- endfor -%}
