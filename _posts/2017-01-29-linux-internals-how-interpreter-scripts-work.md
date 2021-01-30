@@ -25,7 +25,9 @@ interpreter script - differently than, say, an ordinary ELF executable.
 A script is an executable file that begins with a line (starting with the `#!`
 characters) specifying a path to a script interpreter.
 
-`#! /path/to/interpreter [ args ]`
+```
+#! /path/to/interpreter [ args ]
+```
 
 On most Unix implementations, the space after the `#!` is optional.
 
