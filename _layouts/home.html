@@ -20,7 +20,13 @@ layout: default
         </h3>
 
         {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-        <span class="post-meta">{{ post.date | date: date_format }}</span>
+        {%- assign today_date = "now" | date: "%s" -%}
+        {%- assign post_date = post.date | date: "%s" -%}
+        {%- assign diff_seconds = today_date | minus: post_date -%}
+        {%- assign diff_days = diff_seconds | divided_by: 86400 -%}
+        <span class="post-meta">
+          {{ post.date | date: date_format }} - {{ diff_days }} days ago
+        </span>
 
         {%- if site.show_excerpts -%}
           <div style="margin-top: 10px; margin-bottom: 45px;">
