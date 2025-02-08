@@ -9,7 +9,7 @@ layout: default
     <p class="post-meta">
       {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
       {%- assign today_date = "now" | date: "%s" -%}
-      {%- assign post_date = post.date | date: "%s" -%}
+      {%- assign post_date = page.date | date: "%s" -%}
       {%- assign diff_seconds = today_date | minus: post_date -%}
       {%- assign diff_days = diff_seconds | divided_by: 86400 -%}
       <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
