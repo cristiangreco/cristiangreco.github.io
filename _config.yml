@@ -1,10 +1,10 @@
 lang: en
 title: a blog on software engineering topics
 tagline: by cristian greco
-author: by cristian greco
+author:
 url: "https://cristian.regolo.cc"
 baseurl: ""
-description: a blog on software engineering topics (2)
+description: a blog on software engineering topics
 theme: minima
 show_excerpts: true
 google_site_verification: googlea12deda5da4bc2bf
@@ -15,8 +15,6 @@ github_username:  cristiangreco
 linkedin_username: cristiangreco
 social:
   name: Cristian Greco
-disqus:
-  shortname: cristianregolocc
 plugins:
   - jekyll-feed
   - jekyll-sitemap
