@@ -37,3 +37,21 @@ figcaption a {
     color: #000000;
   }
 }
+
+.footer-wrapper {
+  text-align: center;
+  padding: 15px 0;
+}
+
+.site-footer {
+  border-top: 1px solid $grey-color-light;
+  padding: 0;
+}
+
+.home a[href$="feed.xml"] {
+  color: $grey-color;
+
+  .svg-icon {
+    fill: $grey-color;
+  }
+}
