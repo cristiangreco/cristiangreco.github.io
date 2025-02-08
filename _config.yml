@@ -1,6 +1,7 @@
 lang: en
 title: a blog on software engineering topics
-author: ""
+tagline: Cristian Greco
+author:
 url: "https://cristian.regolo.cc"
 baseurl: ""
 description: a blog on software engineering topics
