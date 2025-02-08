@@ -4,6 +4,10 @@
 
 @import "minima";
 
+.site-header {
+  border-top-color: #ff671d;
+}
+
 hr.hrule {
   margin-bottom: 20px;
   border: none;
@@ -24,4 +28,12 @@ figcaption {
 figcaption a {
   color: inherit;
   text-decoration: underline;
+}
+
+.post-link {
+  color: #000000 !important;
+
+  &:visited {
+    color: #000000;
+  }
 }
